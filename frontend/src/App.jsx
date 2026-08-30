@@ -2,6 +2,7 @@ import { useState } from "react"
 import axios from"axios"
 import "./App.css"
 import ListaDestinos from "./componentes/ListaDestinos"
+import CadastroDestino from "./componentes/CadastroDestino"
 
 function App() {
   const[destinos,setDestinos] = useState([])
@@ -19,6 +20,8 @@ function buscarDados(){
 return (
   <>
       <h1>Destinos Turísticos</h1>
+
+      <CadastroDestino/>
 
       <button onClick={buscarDados}>
         Buscar Destinos
