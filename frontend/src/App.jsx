@@ -1,34 +1,44 @@
 import { useState } from "react"
-import axios from"axios"
+import axios from "axios"
 import "./App.css"
 import ListaDestinos from "./componentes/ListaDestinos"
 import CadastroDestino from "./componentes/CadastroDestino"
 
 function App() {
-  const[destinos,setDestinos] = useState([])
 
+  const [destinos, setDestinos] = useState([])
 
+  function buscarDados() {
+    axios.get("http://localhost:8080/Destino")
+      .then(resposta => {
+        setDestinos(resposta.data)
+      })
+      .catch(erro => {
+        console.log("Não foi possível buscar os destinos:", erro)
+      })
+  }
 
-function buscarDados(){
-  axios.get("http://localhost:8080/Destino")
-  .then(resposta => {setDestinos(resposta.data)})
-  .catch(erro => {
-    console.log("Não foi possível buscar os destinos:", erro)
-  })
-}
+  return (
+    <div className="app">
 
-return (
-  <>
-      <h1>Destinos Turísticos</h1>
+      <header className="cabecalho">
+        <h1>Destinos Turísticos</h1>
+        <p>Explore novos lugares e planeje sua próxima viagem</p>
+      </header>
 
-      <CadastroDestino/>
+      <main className="conteudo">
 
-      <button onClick={buscarDados}>
-        Buscar Destinos
-      </button>
+        <CadastroDestino />
 
-      <ListaDestinos destinos={destinos}/>
-    </>
+        <button className="botao-buscar" onClick={buscarDados}>
+          🔎 Buscar Destinos
+        </button>
+
+        <ListaDestinos destinos={destinos} />
+
+      </main>
+
+    </div>
   )
 }
 

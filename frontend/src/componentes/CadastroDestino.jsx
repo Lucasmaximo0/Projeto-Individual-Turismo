@@ -49,6 +49,7 @@ function CadastroDestino() {
                 value={nome}
                 onChange={event => setNome(event.target.value)}
             />
+            <br />
 
             <input
                 type="text"
@@ -56,6 +57,7 @@ function CadastroDestino() {
                 value={cidade}
                 onChange={event => setCidade(event.target.value)}
             />
+            <br />
 
             <input
                 type="text"
@@ -63,6 +65,7 @@ function CadastroDestino() {
                 value={estado}
                 onChange={event => setEstado(event.target.value)}
             />
+            <br />
 
             <input
                 type="text"
@@ -70,6 +73,7 @@ function CadastroDestino() {
                 value={descricao}
                 onChange={event => setDescricao(event.target.value)}
             />
+            <br />
 
             <input
                 type="number"
@@ -77,10 +81,13 @@ function CadastroDestino() {
                 value={precoMedio}
                 onChange={event => setPrecoMedio(event.target.value)}
             />
+            <br /><br />
 
             <button type="submit">
                 Cadastrar
             </button>
+            <br />
+            <br />
 
         </form>
     )
