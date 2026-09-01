@@ -22,7 +22,7 @@ public class TurismoController {
 
     @PostMapping
 
-    public Destino cadastrar(@RequestBody Destino destino) {
+    public ResponseEntity<Destino> cadastrar(@RequestBody Destino destino) {
 
         if (destino.getNome() == null || destino.getNome().isBlank()) {
             throw new IllegalArgumentException("O nome do destino é obrigatório");
@@ -59,7 +59,7 @@ public class TurismoController {
                 destino.getPrecoMedio()
         );
 
-        return destino;
+        return ResponseEntity.status(201).body(destino);
     }
 
     //    public  Destino cadastrar(@RequestBody Destino destino){
@@ -87,12 +87,13 @@ public class TurismoController {
             return destino;
         });
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<Destino> buscarPorId(@PathVariable Integer id){
 
         String sql = """
     Select id, nome, cidade, estado, descricao,
-    preco_medio FROM destinos wherw id = ?""";
+    preco_medio FROM destinos where id = ?""";
 
         List<Destino>  destinos = jdbcTemplate.query(sql,(rs, rowNum) -> {
             Destino destino = new Destino();
@@ -113,6 +114,6 @@ public class TurismoController {
         }
         return ResponseEntity.ok(destinos.get(0));
 
-
     }
+
 }
