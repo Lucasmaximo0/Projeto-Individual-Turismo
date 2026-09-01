@@ -1,5 +1,6 @@
 package com.turismo.projetoindividual;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/Destino")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5174")
 
 public class TurismoController {
     //    private List<Destino> destinos = new ArrayList<>();
@@ -22,6 +23,26 @@ public class TurismoController {
     @PostMapping
 
     public Destino cadastrar(@RequestBody Destino destino) {
+
+        if (destino.getNome() == null || destino.getNome().isBlank()) {
+            throw new IllegalArgumentException("O nome do destino é obrigatório");
+        }
+
+        if (destino.getCidade() == null || destino.getCidade().isBlank()) {
+            throw new IllegalArgumentException("A cidade é obrigatória");
+        }
+
+        if (destino.getEstado() == null || destino.getEstado().isBlank()) {
+            throw new IllegalArgumentException("O estado é obrigatório");
+        }
+
+        if (destino.getDescricao() == null || destino.getDescricao().isBlank()) {
+            throw new IllegalArgumentException("A descrição é obrigatória");
+        }
+
+        if (destino.getPrecoMedio() == null || destino.getPrecoMedio() < 0) {
+            throw new IllegalArgumentException("O preço médio deve ser maior ou igual a zero");
+        }
 
         String sql = """
                 INSERT INTO destino
@@ -50,11 +71,11 @@ public class TurismoController {
 //    }
 //
     @GetMapping
-    public List<Destino> listar(){
-        String sql =  """
-    SELECT id, nome, cidade, estado, descricao, preco_medio 
-    FROM destino """;
-        return  jdbcTemplate.query(sql,(rs, rowNum) -> {
+    public List<Destino> listar() {
+        String sql = """
+                SELECT id, nome, cidade, estado, descricao, preco_medio 
+                FROM destino """;
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Destino destino = new Destino();
             destino.setId(rs.getInt("id"));
             destino.setNome(rs.getString("nome"));
@@ -63,7 +84,35 @@ public class TurismoController {
             destino.setDescricao(rs.getString("descricao"));
             destino.setPrecoMedio(rs.getDouble("preco_medio"));
 
-            return  destino;
+            return destino;
         });
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Destino> buscarPorId(@PathVariable Integer id){
+
+        String sql = """
+    Select id, nome, cidade, estado, descricao,
+    preco_medio FROM destinos wherw id = ?""";
+
+        List<Destino>  destinos = jdbcTemplate.query(sql,(rs, rowNum) -> {
+            Destino destino = new Destino();
+
+            destino.setId(rs.getInt("id"));
+            destino.setNome(rs.getString("nome"));
+            destino.setCidade(rs.getString("cidade"));
+            destino.setEstado(rs.getString("estado"));
+            destino.setDescricao(rs.getString("descricao"));
+            destino.setPrecoMedio(rs.getDouble("preco_medio"));
+
+            return  destino;
+
+        },id);
+
+        if (destinos.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(destinos.get(0));
+
+
     }
 }
