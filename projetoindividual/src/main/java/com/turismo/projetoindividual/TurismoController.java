@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/Destino")
-@CrossOrigin(origins = "http://localhost:5174")
+@CrossOrigin(origins = "http://localhost:5173")
 
 public class TurismoController {
     //    private List<Destino> destinos = new ArrayList<>();
@@ -93,7 +93,7 @@ public class TurismoController {
 
         String sql = """
     Select id, nome, cidade, estado, descricao,
-    preco_medio FROM destinos where id = ?""";
+    preco_medio FROM destino where id = ?""";
 
         List<Destino>  destinos = jdbcTemplate.query(sql,(rs, rowNum) -> {
             Destino destino = new Destino();
@@ -114,6 +114,77 @@ public class TurismoController {
         }
         return ResponseEntity.ok(destinos.get(0));
 
+    }
+    // aqui é o erro 404
+    @PutMapping("/{id}")
+    public ResponseEntity<Destino> atualizar(
+            @PathVariable Integer id,
+            @RequestBody Destino destino) {
+
+        if (destino.getNome() == null || destino.getNome().isBlank()) {
+            throw new IllegalArgumentException("O nome do destino é obrigatório");
+        }
+
+        if (destino.getCidade() == null || destino.getCidade().isBlank()) {
+            throw new IllegalArgumentException("A cidade é obrigatória");
+        }
+
+        if (destino.getEstado() == null || destino.getEstado().isBlank()) {
+            throw new IllegalArgumentException("O estado é obrigatório");
+        }
+
+        if (destino.getDescricao() == null || destino.getDescricao().isBlank()) {
+            throw new IllegalArgumentException("A descrição é obrigatória");
+        }
+
+        if (destino.getPrecoMedio() == null || destino.getPrecoMedio() < 0) {
+            throw new IllegalArgumentException("O preço médio deve ser maior ou igual a zero");
+        }
+
+        String sql = """
+            UPDATE destino
+            SET nome = ?,
+                cidade = ?,
+                estado = ?,
+                descricao = ?,
+                preco_medio = ?
+            WHERE id = ?
+            """;
+
+        int linhasAlteradas = jdbcTemplate.update(
+                sql,
+                destino.getNome(),
+                destino.getCidade(),
+                destino.getEstado(),
+                destino.getDescricao(),
+                destino.getPrecoMedio(),
+                id
+        );
+
+        if (linhasAlteradas == 0) {
+            return ResponseEntity.notFound().build();
+        }
+
+        destino.setId(id);
+
+        return ResponseEntity.ok(destino);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+
+        String sql = """
+            DELETE FROM destino
+            WHERE id = ?
+            """;
+
+        int linhasAlteradas = jdbcTemplate.update(sql, id);
+
+        if (linhasAlteradas == 0) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.noContent().build();
     }
 
 }
