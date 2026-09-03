@@ -1,16 +1,48 @@
-# React + Vite
+## Comunicação entre frontend e backend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+O frontend utiliza Axios para realizar as requisições para a API. O backend possui CORS configurado para permitir a comunicação com o frontend.
 
-Currently, two official plugins are available:
+# API
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Método | Endpoint | Função |
+|---|---|---|
+| GET | `/Destino` | Lista os destinos |
+| GET | `/Destino/{id}` | Busca por ID |
+| POST | `/Destino` | Cadastra um destino |
+| PUT | `/Destino/{id}` | Atualiza um destino |
+| DELETE | `/Destino/{id}` | Exclui um destino |
 
-## React Compiler
+## Códigos HTTP
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Código | Significado |
+|---|---|
+| 200 | Sucesso |
+| 201 | Recurso criado |
+| 400 | Dados inválidos |
+| 404 | Recurso não encontrado |
+| 204 | Recurso excluído |
 
-## Expanding the Oxlint configuration
+## Validações
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+A API valida os dados antes do cadastro e da atualização. Os campos obrigatórios são nome, cidade, estado, descrição e preço médio. O preço médio não pode ser menor que zero.
+
+## Banco de dados
+
+O projeto utiliza o H2 como banco de dados relacional. A tabela utilizada é `destino`.
+
+O script de criação está localizado em:
+
+`projetoindividual/src/main/resources/schema.sql`
+
+## Testes
+
+Os endpoints foram testados utilizando o Bruno. Também foram realizados testes de integração entre o frontend React e o backend.
+
+## Controle de versão
+
+O projeto utiliza Git e GitHub para o versionamento do código.
+
+
+
+  
+
